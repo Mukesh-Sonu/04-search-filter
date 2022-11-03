@@ -1,23 +1,51 @@
-import logo from './logo.svg';
-import './App.css';
+import "./index.css";
+import mock from "./Mock.json";
+
+import { useState } from "react";
 
 function App() {
+  const [search, setSearch] = useState("");
+
+  const [users, setUsers] = useState(mock);
+
+  const handleChange = (e) => {
+    setSearch(e.target.value);
+
+    const newUsers = mock.filter((val) => {
+      if (search === "") {
+        return val;
+      }
+      if (val.first_name.toLowerCase().includes(search.toLowerCase())) {
+        return val;
+      }
+      return "";
+    });
+
+    setUsers(newUsers);
+  };
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <div className="input-div">
+        <input
+          className="input-box"
+          value={search}
+          placeholder="Search..."
+          onChange={handleChange}
+        />
+      </div>
+
+      <div>
+        <div className="display-users">
+          {users.length ? (
+            users.map((data, index) => {
+              return <p key={index}>{data.first_name}</p>;
+            })
+          ) : (
+            <div className="no-results">No Search Results😕</div>
+          )}
+        </div>
+      </div>
     </div>
   );
 }
